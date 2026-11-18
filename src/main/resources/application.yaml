@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: ToDoApplication
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/codekitchen
+    username: codekitchen
+    password: 12345678
+    hikari:
+      maximum-pool-size: 8
+
+  jpa:
+    hibernate:
+      ddl-auto: update
