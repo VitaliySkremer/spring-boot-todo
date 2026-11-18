@@ -1,27 +1,31 @@
 package ru.skremer.todoapplication.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.skremer.todoapplication.dao.RecordDao;
+import org.springframework.transaction.annotation.Transactional;
 import ru.skremer.todoapplication.entity.Record;
 import ru.skremer.todoapplication.entity.RecordStatus;
 import ru.skremer.todoapplication.entity.dto.RecordsContainerDto;
+import ru.skremer.todoapplication.repository.RecordRepository;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class RecordService {
-    private final RecordDao recordDao;
+    private final RecordRepository recordRepository;
 
     @Autowired
-    public RecordService(RecordDao recordDao) {
-        this.recordDao = recordDao;
+    public RecordService(RecordRepository recordRepository) {
+        this.recordRepository = recordRepository;
     }
 
+    @Transactional(readOnly = true)
     public RecordsContainerDto findAll(String filter) {
-        List<Record> recordList = recordDao.findAll();
+        List<Record> recordList = recordRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
 
         int numberOfDoneRecords = 0;
         int numberOfActiveRecords = 0;
@@ -41,7 +45,7 @@ public class RecordService {
         List<String> allowedFilter = Arrays
                 .stream(RecordStatus.values())
                 .map(Enum::name)
-                .collect(Collectors.toList());
+                .toList();
 
         if (!allowedFilter.contains(filterInUpperCasse))
             return new RecordsContainerDto(recordList, numberOfDoneRecords, numberOfActiveRecords);
@@ -59,14 +63,14 @@ public class RecordService {
 
         if (titleNormalized.isEmpty()) return;
 
-        recordDao.addRecord(new Record(titleNormalized));
+        recordRepository.save(new Record(titleNormalized));
     }
 
     public void makeRecordDone(int id) {
-        recordDao.makeRecordStatus(id, RecordStatus.DONE);
+        recordRepository.updateStatusById(id, RecordStatus.DONE);
     }
 
     public void deleteRecord(int id) {
-        recordDao.deleteRecord(id);
+        recordRepository.deleteById(id);
     }
 }
