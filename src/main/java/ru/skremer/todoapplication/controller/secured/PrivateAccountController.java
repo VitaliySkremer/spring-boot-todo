@@ -1,30 +1,26 @@
-package ru.skremer.todoapplication.controller;
+package ru.skremer.todoapplication.controller.secured;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.skremer.todoapplication.entity.dto.RecordsContainerDto;
 import ru.skremer.todoapplication.service.RecordService;
 
 @Controller
-public class CommonController {
+@RequestMapping("/account")
+public class PrivateAccountController {
 
     private final RecordService recordService;
 
     @Autowired
-    public CommonController(RecordService recordService) {
+    public PrivateAccountController(RecordService recordService) {
         this.recordService = recordService;
     }
 
-    @RequestMapping("/")
-    public String redirectToHomePage() {
-        return "redirect:/home";
-    }
-
-    @RequestMapping("/home")
+    @RequestMapping
     public String getMainPage(
             Model model,
             @RequestParam(value = "filter", required = false, defaultValue = "all") String filter
@@ -35,30 +31,30 @@ public class CommonController {
         model.addAttribute("numberOfDoneItems", recordsContainerDto.getNumberOfDoneRecords());
         model.addAttribute("numberOfActiveItems", recordsContainerDto.getNumberOfActiveRecords());
 
-        return "main-page";
+        return "private/account-page";
     }
 
-    @RequestMapping(value = "/add-record", method = RequestMethod.POST)
+    @PostMapping(value = "/add-record")
     public String addRecord(@RequestParam("title") String title) {
         recordService.addRecord(title);
 
-        return "redirect:/home";
+        return "redirect:/account";
     }
 
-    @RequestMapping(value = "/make-record-done", method = RequestMethod.POST)
+    @PostMapping(value = "/make-record-done")
     public String makeRecordDone(@RequestParam("id") int id,
                                  @RequestParam(value = "filter", required = false) String filter) {
         recordService.makeRecordDone(id);
 
-        return "redirect:/home" + generateFilterParam(filter);
+        return "redirect:/account" + generateFilterParam(filter);
     }
 
-    @RequestMapping(value = "/delete-record", method = RequestMethod.POST)
+    @PostMapping(value = "/delete-record")
     public String deleteRecord(@RequestParam("id") int id,
                                @RequestParam(value = "filter", required = false) String filter) {
         recordService.deleteRecord(id);
 
-        return "redirect:/home" + generateFilterParam(filter);
+        return "redirect:/account" + generateFilterParam(filter);
     }
 
     public String generateFilterParam(String filterParam) {
