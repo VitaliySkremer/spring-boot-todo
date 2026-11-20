@@ -1,25 +1,24 @@
 package ru.skremer.todoapplication.controller.secured;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.skremer.todoapplication.entity.User;
 import ru.skremer.todoapplication.entity.dto.RecordsContainerDto;
 import ru.skremer.todoapplication.service.RecordService;
+import ru.skremer.todoapplication.service.UserService;
 
 @Controller
 @RequestMapping("/account")
+@RequiredArgsConstructor
 public class PrivateAccountController {
 
     private final RecordService recordService;
-
-    @Autowired
-    public PrivateAccountController(RecordService recordService) {
-        this.recordService = recordService;
-    }
+    private final UserService userService;
 
     @GetMapping
     public String getMainPage(
@@ -28,9 +27,12 @@ public class PrivateAccountController {
     ) {
         RecordsContainerDto recordsContainerDto = recordService.findAll(filter);
 
+        User currentUser = userService.getCurrentUser();
+
         model.addAttribute("records", recordsContainerDto.getRecords());
         model.addAttribute("numberOfDoneItems", recordsContainerDto.getNumberOfDoneRecords());
         model.addAttribute("numberOfActiveItems", recordsContainerDto.getNumberOfActiveRecords());
+        model.addAttribute("userName", currentUser.getName());
 
         return "private/account-page";
     }

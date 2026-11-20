@@ -1,6 +1,8 @@
 package ru.skremer.todoapplication.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,5 +31,17 @@ public class UserService {
         userRepository.save(user);
 
         return user;
+    }
+
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new IllegalStateException("Authentication is null");
+        }
+
+        String email = authentication.getName();
+
+        return userRepository
+                .findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 }
