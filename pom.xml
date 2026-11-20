@@ -65,6 +65,13 @@
             <artifactId>thymeleaf-extras-springsecurity6</artifactId>
         </dependency>
 
+        <!--  COMMON  -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>annotationProcessor</scope>
+        </dependency>
+
         <!--  TEST  -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

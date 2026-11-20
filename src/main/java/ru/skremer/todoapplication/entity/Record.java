@@ -1,9 +1,20 @@
 package ru.skremer.todoapplication.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
 @Entity
 @Table(name = "records")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,35 +26,8 @@ public class Record {
     @Column(name = "status", nullable = false)
     private RecordStatus status;
 
-    public Record() {
-    }
-
     public Record(String title) {
         this.title = title;
         this.status = RecordStatus.ACTIVE;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public RecordStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(RecordStatus status) {
-        this.status = status;
     }
 }
