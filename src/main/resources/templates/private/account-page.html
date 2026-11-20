@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="filter-container">
-            <form action="/account" method="get" class="filter-form"
+            <form th:action="@{/account}" method="get" class="filter-form"
                   th:with="filter=${#strings.toLowerCase(param.filter)}">
                 <div class="filter-form__input">
                     <input th:checked="${filter != 'done' and filter != 'active'}" type="radio"
@@ -51,7 +51,7 @@
                           th:text="${record.title}"></span>
                 </div>
                 <div class="record__controls">
-                    <form th:if="${record.status.name == 'ACTIVE'}" action="/account/make-record-done" method="post"
+                    <form th:if="${record.status.name == 'ACTIVE'}" th:action="@{/account/make-record-done}" method="post"
                           class="record__controls-form">
                         <button type="submit" class="button_type_approve">
                             <input th:value="${record.id}" type="hidden" name="id"/>
@@ -70,7 +70,7 @@
                             </svg>
                         </button>
                     </form>
-                    <form action="/account/delete-record" method="post" class="record__controls-form">
+                    <form th:action="@{/account/delete-record}" method="post" class="record__controls-form">
                         <input th:value="${record.id}" type="hidden" name="id"/>
                         <input th:value="${#strings.toLowerCase(param.filter)}" type="hidden" name="filter"/>
                         <button type="submit" class="button_type_close">
@@ -84,7 +84,7 @@
             </div>
         </div>
         <div class="management-container">
-            <form action="/account/add-record" method="post" class="management-form">
+            <form th:action="@{/account/add-record}" method="post" class="management-form">
                 <input type="text" name="title" maxlength="100" placeholder="What needs to be done..."
                        class="management-form__input" required>
                 <button type="submit" class="management-form__button">Add Record</button>
