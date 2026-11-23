@@ -40,4 +40,16 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Record> records;
+
+    public boolean isSimpleUser() {
+        return this.getRole() == UserRole.USER;
+    }
+
+    public boolean isAdmin() {
+        return this.getRole() == UserRole.ADMIN;
+    }
+
+    public boolean isSuperAdmin() {
+        return this.getRole() == UserRole.SUPER_ADMIN;
+    }
 }

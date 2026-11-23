@@ -11,6 +11,9 @@ import ru.skremer.todoapplication.entity.User;
 import ru.skremer.todoapplication.entity.UserRole;
 import ru.skremer.todoapplication.repository.UserRepository;
 
+import java.util.Collection;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -31,6 +34,32 @@ public class UserService {
         userRepository.save(user);
 
         return user;
+    }
+
+    public void deleteById(int id) {
+        User userToBeDelete = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User with id = " + id + " not found"));
+        User currentUser = getCurrentUser();
+
+        if (userToBeDelete.isSuperAdmin())
+            throw new IllegalArgumentException("User with id = " + id + " is superAdmin");
+        if (userToBeDelete.isAdmin() && !currentUser.isSuperAdmin())
+            throw new IllegalArgumentException("not enough rights");
+
+        userRepository.deleteById(id);
+    }
+
+    public void updateRole(int id, UserRole userRole) {
+        User userToBeUpgrade = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User with id = " + id + " not found"));
+
+        if (userToBeUpgrade.isSuperAdmin()) throw new IllegalArgumentException("User is superadmin");
+
+        userRepository.updateRole(id, userRole);
+    }
+
+    public List<User> findAllByRoleIn(Collection<UserRole> roles) {
+        return userRepository.findAllByRoleInOrderById(roles);
     }
 
     public User getCurrentUser() {

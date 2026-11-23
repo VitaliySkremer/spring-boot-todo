@@ -35,8 +35,9 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/", "/registration", "/error",
                                 "/css/**", "/js/**", "/images/**", "/.well-known/**").permitAll()
-                        .requestMatchers("/account/**").hasAnyRole(UserRole.USER.name(), UserRole.ADMIN.name())
-                        .requestMatchers("/management/**").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers("/account/**").hasAnyRole(UserRole.USER.name(), UserRole.ADMIN.name(), UserRole.SUPER_ADMIN.name())
+                        .requestMatchers("/management/admin/**").hasAnyRole(UserRole.ADMIN.name(), UserRole.SUPER_ADMIN.name())
+                        .requestMatchers("/management/super-admin/**").hasRole(UserRole.SUPER_ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
