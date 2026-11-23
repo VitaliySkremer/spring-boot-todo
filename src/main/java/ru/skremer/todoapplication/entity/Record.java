@@ -2,9 +2,12 @@ package ru.skremer.todoapplication.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,8 +29,13 @@ public class Record {
     @Column(name = "status", nullable = false)
     private RecordStatus status;
 
-    public Record(String title) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Record(String title, User user) {
         this.title = title;
+        this.user = user;
         this.status = RecordStatus.ACTIVE;
     }
 }

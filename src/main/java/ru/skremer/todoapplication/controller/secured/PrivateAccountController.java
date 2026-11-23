@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.skremer.todoapplication.entity.User;
 import ru.skremer.todoapplication.entity.dto.RecordsContainerDto;
 import ru.skremer.todoapplication.service.RecordService;
 import ru.skremer.todoapplication.service.UserService;
@@ -27,12 +26,10 @@ public class PrivateAccountController {
     ) {
         RecordsContainerDto recordsContainerDto = recordService.findAll(filter);
 
-        User currentUser = userService.getCurrentUser();
-
         model.addAttribute("records", recordsContainerDto.getRecords());
         model.addAttribute("numberOfDoneItems", recordsContainerDto.getNumberOfDoneRecords());
         model.addAttribute("numberOfActiveItems", recordsContainerDto.getNumberOfActiveRecords());
-        model.addAttribute("userName", currentUser.getName());
+        model.addAttribute("userName", recordsContainerDto.getUser().getName());
 
         return "private/account-page";
     }
